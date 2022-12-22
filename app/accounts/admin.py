@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.db import models
 from django.forms import CharField, Textarea, TextInput
+from django.utils.translation import gettext_lazy as _
 from djongo import models
 from rest_framework_simplejwt import token_blacklist
 
@@ -13,21 +14,26 @@ class UserAdminConfig(UserAdmin):
 
     search_fields = ('email', 'user_name', 'first_name',)
     list_filter = ('email', 'user_name', 'first_name', 'is_active', 'is_staff')
-    ordering = ('-start_date',)
+    ordering = ['id']
     list_display = ('email', 'user_name', 'first_name',
                     'is_active', 'is_staff')
     fieldsets = (
         (None, {'fields': ('email', 'user_name', 'first_name',)}),
-        ('Permissions', {'fields': ('is_staff', 'is_active')}),
+        (
+            _('Permissions'), {'fields': ('is_staff', 'is_active', 'is_superuser')}
+
+        ),
+        (_('Important dates'), {'fields': ('last_login',)}),
         ('Personal', {'fields': ('about',)}),
     )
+    readonly_fields = ['last_login']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 20, 'cols': 60})},
     }
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'user_name', 'first_name', 'password1', 'password2', 'is_active', 'is_staff')}
+            'fields': ('email', 'user_name', 'first_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser')}
          ),
     )
 
