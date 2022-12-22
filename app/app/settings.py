@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # 'api',
     'accounts',
     'rest_framework',
+    'drf_spectacular',
     'rest_framework_simplejwt.token_blacklist',
     'django_extensions',
     'corsheaders'
@@ -153,6 +154,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
+     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
@@ -209,9 +212,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-# Custom user model
-AUTH_USER_MODEL = "accounts.User"
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
@@ -230,4 +230,15 @@ SIMPLE_JWT = {
     # 'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     # 'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     # 'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+# Custom user model
+AUTH_USER_MODEL = "accounts.User"
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+# }
+
+SPECTACULAR_SETTINGS = {
+    'COMPONENT_SPLIT_REQUEST': True,
 }
