@@ -1,11 +1,13 @@
+"""
+Selializers for the user account View.
+"""
 from enum import unique
 
+from accounts.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import (TokenObtainPairSerializer,
                                                   TokenRefreshSerializer)
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from accounts.models import User
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -20,7 +22,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     Currently unused in preference of the below.
     """
     email = serializers.EmailField(required=True)
-    user_name = serializers.CharField(required=True)
+    # user_name = serializers.CharField(required=True)
     password = serializers.CharField(min_length=8, write_only=True)
 
     def validate_email(self, value):
@@ -29,23 +31,23 @@ class CustomUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email Already Exists")
         return lower_email
 
-    def validate_user_name(self, value):
-        user_name = value.lower()
-        if User.objects.filter(user_name__iexact=user_name).exists():
-            raise serializers.ValidationError("User Name Already Exists")
-        return user_name
+    # def validate_user_name(self, value):
+    #     user_name = value.lower()
+    #     if User.objects.filter(user_name__iexact=user_name).exists():
+    #         raise serializers.ValidationError("User Name Already Exists")
+    #     return user_name
 
     def get_cleaned_data(self):
         super(CustomUserSerializer, self).get_cleaned_data()
         return {
             'email' : self.validated_data.get('email', ''),
-            'user_name' : self.validated_data.get('user_name', ''),
+            # 'user_name' : self.validated_data.get('user_name', ''),
             'password' : self.validated_data.get('password', '')
 
         }
     class Meta:
         model = User
-        fields = ('email', 'user_name', 'password')
+        fields = ('email', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -59,6 +61,17 @@ class CustomUserSerializer(serializers.ModelSerializer):
             return instance
         except :
             raise serializers.ValidationError('User already exists.')
+
+    def update(self, instance, validated_data):
+        """Update and return user."""
+        password = validated_data.pop('password', None)
+        user = super().update(instance, validated_data)
+
+        if password:
+            user.set_password(password)
+            user.save()
+        return
+
 class TokenObtainLifetimeSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):

@@ -14,7 +14,7 @@ class UserManager(BaseUserManager):
     """
     ibots user manager
     """
-    def create_superuser(self, email, first_name='', password=None, **other_fields):
+    def create_superuser(self, email, password=None, **other_fields):
 
         """ create a new ibots super user"""
         other_fields.setdefault('is_staff', True)
@@ -28,11 +28,11 @@ class UserManager(BaseUserManager):
         #     raise ValueError(
         #         'Superuser must be assigned to is_superuser=True.')
 
-        user = self.create_user(email, first_name, password, **other_fields)
-        user.save(useing=self._db)
+        user = self.create_user(email, password, **other_fields)
+        user.save(using=self._db)
         return user
 
-    def create_user(self, email, first_name, password=None, **other_fields):
+    def create_user(self, email, password=None, **other_fields):
 
         """ create a new ibots user"""
 
@@ -43,8 +43,7 @@ class UserManager(BaseUserManager):
         #     raise ValueError(_('You must provide an user_name'))
 
         email = self.normalize_email(email)
-        user = self.model(email=email,
-                          first_name=first_name, **other_fields)
+        user = self.model(email=email, **other_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -63,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 serialize = False,
                 verbose_name ='id')
     email = models.EmailField(_('email address'), unique=True)
-    user_name = models.CharField(max_length=150, unique=True)
+    user_name = models.CharField(max_length=150,  blank=True)
     first_name = models.CharField(max_length=150, blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     about = models.TextField(_(

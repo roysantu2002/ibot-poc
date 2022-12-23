@@ -166,6 +166,13 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+SPECTACULAR_SETTINGS = {
+    'COMPONENT_SPLIT_REQUEST': True,
+    'TITLE': 'ibots api',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+}
 # permission:
 # AllowAny
 # IsAuthenticated
