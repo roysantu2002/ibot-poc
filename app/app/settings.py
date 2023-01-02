@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # 'api',
     'accounts',
     'rest_framework',
+    # 'rest_framework.authtoken',
     'drf_spectacular',
     'rest_framework_simplejwt.token_blacklist',
     'django_extensions',
@@ -159,12 +160,21 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    #    'rest_framework.authentication.SessionAuthentication',
+    #    'rest_framework.authentication.TokenAuthentication',
+    #    'rest_framework.authentication.BasicAuthentication',
+   ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.AllowAny',
+    # ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # )
 }
 
 SPECTACULAR_SETTINGS = {
@@ -179,7 +189,7 @@ SPECTACULAR_SETTINGS = {
 # IsAdminUser
 # IsAuthenticatedOrReadOnly
 
-CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:3000', 'http://localhost:8000']
+CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:3000', 'http://localhost:8000', 'http://0.0.0.0:8000']
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 

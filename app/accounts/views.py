@@ -1,5 +1,8 @@
 from rest_framework import authentication, generics, permissions, status
-from rest_framework.permissions import AllowAny
+from rest_framework.authentication import (BasicAuthentication,
+                                           SessionAuthentication,
+                                           TokenAuthentication)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.views import APIView
@@ -78,30 +81,41 @@ class TokenRefreshView(TokenViewBase):
 UserView
 """
 
-class UserView(APIView):
-    serializer_class = CustomUserSerializer
-    def get(self, request, format=None):
-        try:
-            user = request.user
-            user = CustomUserSerializer(user)
-
-            return Response(
-                {'user': user.data},
-                status=status.HTTP_200_OK
-            )
-        except:
-            return Response(
-                {'error': 'Something went wrong'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+# class UserView(APIView):
+#     serializer_class = CustomUserSerializer
+#     authentication_classes = [authentication.TokenAuthentication]
+#     permission_classes = [permissions.IsAuthenticated]
+#
+#     def get_object(self):
+#         """Retrieve and return the authenticated user."""
+#         return self.request.user
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
     """Manage the authenticated user."""
 
     serializer_class = CustomUserSerializer
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # authentication_classes = [authentication.TokenAuthentication,]
+    # permission_classes = [IsAuthenticated]
+
+    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         """Retrieve and return the authenticated user."""
         return self.request.user
+
+    # def get(self, request, format=None):
+    #     content = {
+    #         'user': str(request.user.email)
+    #     }
+    #     return Response(content)
+
+    # authentication_classes = (authentication.TokenAuthentication,)
+    # permission_classes = (permissions.IsAuthenticated,)
+    # print(permission_classes)
+
+    # def get_object(self):
+    #     print(self.request.user)
+    #     """Retrieve and return the authenticated user."""
+    #     return self.request.user
