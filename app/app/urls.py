@@ -18,6 +18,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     # path('api/', include('api.urls', namespace='api')),
     path('api/account/', include('accounts.urls')),
+    path('api/ldnsql/', include('ldnsql.urls')),
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     # path('api/account/', include('api.urls')),

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'api',
     'accounts',
+    'ldnsql',
     'rest_framework',
     # 'rest_framework.authtoken',
     'drf_spectacular',
@@ -161,13 +162,15 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        #  'rest_framework.permissions.AllowAny',
+         'rest_framework_simplejwt.authentication.JWTAuthentication',
     #    'rest_framework.authentication.SessionAuthentication',
     #    'rest_framework.authentication.TokenAuthentication',
     #    'rest_framework.authentication.BasicAuthentication',
    ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+          'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAuthenticated',
     ],
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.AllowAny',
