@@ -1,7 +1,8 @@
 """
 views for ldnsql APIs
 """
-
+from drf_spectacular.utils import (OpenApiParameter, OpenApiTypes,
+                                   extend_schema, extend_schema_view)
 from ldnsql.models import SQLUser
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
@@ -23,12 +24,18 @@ class SQLUserList(ListAPIView):
      serializer_class = SQLUserSerializer
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(name='user_id',location=OpenApiParameter.QUERY, description='user_id', required=False, type=str),
+    ],
+)
 class SQLUserView(GenericAPIView):
     """
     """
+
     serializer_class = SQLUserSerializer
     queryset = SQLUser.objects.all()
-    print(queryset)
+
     # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -39,13 +46,15 @@ class SQLUserView(GenericAPIView):
     def get(self, request):
 
         try:
-            id = request.query_params["id"]
-            print(id)
-            if id != None:
-                user = SQLUser.objects.get(id=id)
-                serializer = SQLUserSerializer(user)
+            user_id = self.request.query_params.get('user_id',None)
+            print(user_id)
+
+            if user_id != None:
+                queryset = self.get_queryset().filter(user_id=user_id)
+                serializer = SQLUserSerializer(queryset,many=True)
+                return Response(serializer.data)
         except:
             user = self.get_queryset()
             serializer = SQLUserSerializer(user)
-        return Response(serializer.data)
+        return Response({})
 
