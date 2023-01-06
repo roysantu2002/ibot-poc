@@ -19,7 +19,7 @@ from .serializers import (CustomUserSerializer, MyTokenObtainPairSerializer,
 class RegisterView(generics.CreateAPIView):
     serializer_class = CustomUserSerializer
     # permission_classes = (permissions.AllowAny)
-    # permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 #
 #     def post(self, request):
 #     try:

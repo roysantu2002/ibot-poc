@@ -63,8 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-     'whitenoise.middleware.WhiteNoiseMiddleware',
-       'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -165,13 +165,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         #  'rest_framework.permissions.AllowAny',
          'rest_framework_simplejwt.authentication.JWTAuthentication',
-    #    'rest_framework.authentication.SessionAuthentication',
+       'rest_framework.authentication.SessionAuthentication',
     #    'rest_framework.authentication.TokenAuthentication',
-    #    'rest_framework.authentication.BasicAuthentication',
+       'rest_framework.authentication.BasicAuthentication',
    ),
     'DEFAULT_PERMISSION_CLASSES': [
+          'rest_framework.permissions.IsAuthenticated',
           'rest_framework.permissions.AllowAny',
-        # 'rest_framework.permissions.IsAuthenticated',
+
     ],
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.AllowAny',
@@ -249,8 +250,8 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
     # 'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    # 'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    # 'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
 # Custom user model

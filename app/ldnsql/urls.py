@@ -15,7 +15,7 @@ app_name = 'ldnsql'
 urlpatterns = [
        path('sqlusers/', SQLUserView.as_view(), name="sql_user"),
        path('createsqluser/', CreateSQLUser.as_view(), name="create_sql_user"),
-       path('sqluserlist/{user_id}', SQLUserList.as_view(), name="sql_user_list"),
+       path('sqluserlist/', SQLUserList.as_view(), name="sql_user_list"),
 
 
 ]
