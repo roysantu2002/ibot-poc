@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # 'api',
     'accounts',
     'ldnsql',
+    'ldnservers',
     'rest_framework',
     # 'rest_framework.authtoken',
     'drf_spectacular',
@@ -235,7 +236,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,

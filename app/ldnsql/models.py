@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from ldnservers.models import SQLServer
 
 # Create your models here.
 
@@ -15,7 +16,8 @@ class SQLUser(models.Model):
                 serialize = False,
                 verbose_name ='id')
      user_id = models.CharField(max_length=150,  blank=True)
-     server_id = models.CharField(max_length=150,  blank=True)
+     #server_id = models.CharField(max_length=150,  blank=True)
+     server = models.ForeignKey(SQLServer, blank=True, null=True, on_delete=models.CASCADE)
      flag = models.BooleanField()
 
      def __str__(self) -> str:
