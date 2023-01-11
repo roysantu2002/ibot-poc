@@ -1,6 +1,9 @@
 """
 Selializers for the user account View.
 """
+import logging
+import os
+import sys
 from enum import unique
 
 from accounts.models import User
@@ -9,6 +12,10 @@ from rest_framework_simplejwt.serializers import (TokenObtainPairSerializer,
                                                   TokenRefreshSerializer)
 from rest_framework_simplejwt.tokens import RefreshToken
 
+logger = logging.getLogger(__name__)
+logger_django = logging.getLogger('django')
+logger_demo = logging.getLogger('demo_log')
+logger_ibots = logging.getLogger('ibots_log')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -28,7 +35,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         lower_email = value.lower()
         if User.objects.filter(email__iexact=lower_email).exists():
+            logger_ibots.error('validate_email')
+            exc_type, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            logger_ibots.error(exc_type, fname, exc_tb.tb_lineno)
+
             raise serializers.ValidationError("Email Already Exists")
+
         return lower_email
 
     # def validate_user_name(self, value):

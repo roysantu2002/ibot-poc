@@ -1,3 +1,5 @@
+
+
 from rest_framework import authentication, generics, permissions, status
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication,
@@ -12,6 +14,8 @@ from rest_framework_simplejwt.views import TokenViewBase
 from .serializers import (CustomUserSerializer, MyTokenObtainPairSerializer,
                           TokenObtainLifetimeSerializer,
                           TokenRefreshLifetimeSerializer)
+
+
 
 """
     RegisterView
