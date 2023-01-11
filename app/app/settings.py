@@ -17,19 +17,30 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-print(config('DJANGO_SECRET_KEY'))
-SECRET_KEY = config('DJANGO_SECRET_KEY')
 
+SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
+print(SECRET_KEY)
 # SECURITY WARNING: don't run with debug turned on in production!
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DJANGO_DEBUG', True)
+DEBUG = os.environ.get('DJANGO_DEBUG', True)
 if DEBUG in ['OFF', 'off', 'No', 'no', 'False', 'false', '0', '']:
     DEBUG = False
 else:
     DEBUG = True
-
+print(DEBUG)
 # ALLOWED_HOSTS = ['auth-core-app.herokuapp.com', 'localhost', '127.0.0.1']
-ALLOWED_HOSTS = ['auth-core-app.herokuapp.com', '127.0.0.1', 'localhost', '0.0.0.0']
+# ALLOWED_HOSTS = ['auth-core-app.herokuapp.com', '127.0.0.1', 'localhost', '0.0.0.0']
+
+"""
+ALLOWED_HOSTS
+"""
+
+ENV_ALLOWED_HOST = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = []
+
+if ENV_ALLOWED_HOST:
+    ALLOWED_HOSTS = ENV_ALLOWED_HOST
+
+print(ALLOWED_HOSTS)
 
 # Application definition
 
@@ -100,17 +111,16 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # }
 # mongoengine.connect(db='coreapp', host='127.0.0.1', username=username, password=pwd)
 
-if config('DJANGO_DEBUG') == 1:
+if os.environ.get('DJANGO_DEBUG') == 1:
     DATABASES = dj_database_url.config(conn_max_age=600, ssl_require=True)
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgres',
-            'HOST': 'db',
-            'PORT': '5434',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres'
+            'HOST': os.environ.get('DB_HOST'),
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASS'),
         }
     }
 
@@ -208,18 +218,28 @@ USE_I18N = True
 USE_TZ = True
 
 
+"""
+static url
+"""
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
+
+MEDIA_ROOT = '/vol/web/media'
+STATIC_ROOT = '/vol/web/static'
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_TMP = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+#
+# STATIC_URL = '/static/'
+# # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_TMP = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # STATIC_URL = '/static/'

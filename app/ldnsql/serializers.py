@@ -13,7 +13,7 @@ class SQLUserSerializer(serializers.ModelSerializer):
         fields = ['user_id', 'server', 'flag']
         read_only_fields = ['id']
 
-    def create(self, instance, validated_data):
+    def create(self, validated_data):
         try:
             instance = self.Meta.model(**validated_data)
             instance.save()
