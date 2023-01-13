@@ -4,7 +4,6 @@ ibots auth user model
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
-from django.db.models import Model
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -20,14 +19,6 @@ class UserManager(BaseUserManager):
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
         other_fields.setdefault('is_active', True)
-
-        # if other_fields.get('is_staff') is not True:
-        #     raise ValueError(
-        #         'Superuser must be assigned to is_staff=True.')
-        # if other_fields.get('is_superuser') is not True:
-        #     raise ValueError(
-        #         'Superuser must be assigned to is_superuser=True.')
-
         user = self.create_user(email, password, **other_fields)
         user.save(using=self._db)
         return user
@@ -38,9 +29,6 @@ class UserManager(BaseUserManager):
 
         if not email:
             raise ValueError(_('You must provide an email address'))
-
-        # if not user_name:
-        #     raise ValueError(_('You must provide an user_name'))
 
         email = self.normalize_email(email)
         user = self.model(email=email, **other_fields)

@@ -1,5 +1,10 @@
 
 
+import logging
+
+from account.models import User
+from drf_spectacular.utils import (OpenApiParameter, OpenApiTypes,
+                                   extend_schema, extend_schema_view)
 from rest_framework import authentication, generics, permissions, status
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication,
@@ -15,7 +20,10 @@ from .serializers import (CustomUserSerializer, MyTokenObtainPairSerializer,
                           TokenObtainLifetimeSerializer,
                           TokenRefreshLifetimeSerializer)
 
-
+logger = logging.getLogger(__name__)
+logger_django = logging.getLogger('django')
+warn_log = logging.getLogger('warn_log')
+logger_ibots = logging.getLogger('ibots_log')
 
 """
     RegisterView
@@ -60,8 +68,10 @@ class BlacklistTokenUpdateView(APIView):
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist()
+            logger_ibots.error(f'refresh_token {request.session["id"]}')
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
+            logger_ibots.error(f'refresh_token {request.session["id"]} status.HTTP_400_BAD_REQUEST')
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -94,20 +104,36 @@ UserView
 #         """Retrieve and return the authenticated user."""
 #         return self.request.user
 
-class ManageUserView(generics.RetrieveUpdateAPIView):
+@extend_schema(
+    parameters=[
+        OpenApiParameter(name='user_id',location=OpenApiParameter.QUERY, description='user_id', required=False, type=str),
+    ],
+)
+class ManageUserView(APIView):
+
     """Manage the authenticated user."""
+    def get(self, request):
+        permission_classes = [IsAuthenticated]
 
-    serializer_class = CustomUserSerializer
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # authentication_classes = [authentication.TokenAuthentication,]
-    # permission_classes = [IsAuthenticated]
+        try:
+                email = request.query_params.get('user_id',None)
+                # print(user_id)
+                user = User.objects.get(email=email)
+                user = CustomUserSerializer(user)
 
-    # authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+                return Response(
+                    {'user': user.data},
+                    status=status.HTTP_200_OK
+                )
+        except:
+                return Response(
+                    {'error': 'Something went wrong when trying to load user'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
 
-    def get_object(self):
-        """Retrieve and return the authenticated user."""
-        return self.request.user
+    # def get_object(self):
+    #     """Retrieve and return the authenticated user."""
+    #     return self.request.user
 
     # def get(self, request, format=None):
     #     content = {

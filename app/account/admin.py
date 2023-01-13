@@ -1,12 +1,10 @@
-from accounts.models import User
-from django import forms
+from account.models import User
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.db import models
-from django.forms import CharField, Textarea, TextInput
+from django.forms import Textarea
 from django.utils.translation import gettext_lazy as _
 from djongo import models
-from rest_framework_simplejwt import token_blacklist
 
 
 class UserAdminConfig(UserAdmin):
@@ -36,13 +34,5 @@ class UserAdminConfig(UserAdmin):
             'fields': ('email', 'user_name', 'first_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser')}
          ),
     )
-
-# class OutstandingTokenAdmin(token_blacklist.admin.OutstandingTokenAdmin):
-#
-#     def has_delete_permission(self, *args, **kwargs):
-#         return True # or whatever logic you want
-#
-# admin.site.unregister(token_blacklist.models.OutstandingToken)
-# admin.site.register(token_blacklist.models.OutstandingToken, OutstandingTokenAdmin)
 
 admin.site.register(User, UserAdminConfig)

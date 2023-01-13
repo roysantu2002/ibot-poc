@@ -1,7 +1,7 @@
 """
 Serializers for ldnsql APIs
 """
-from ldnsql.models import SQLUser
+from sqluser.models import SQLUser
 from rest_framework import serializers
 
 

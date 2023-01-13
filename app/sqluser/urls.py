@@ -11,13 +11,13 @@ from .views import (CreateSQLUser, CustomerViewSet, SQLUserList,
 # router = DefaultRouter()
 # router.register('ldnsql', views.SQLUserView)
 
-app_name = 'ldnsql'
+app_name = 'sql-users'
 
 urlpatterns = [
-       path('sqluser/', SQLUserView.as_view(), name="sql_user"),
-       path('createsqluser/', CreateSQLUser.as_view(), name="create_sql_user"),
-       path('sqluserlist/', SQLUserList.as_view(), name="sql_user_list"),
-       path('sqluserupdate/<int:pk>', SQLUserUpdateView.as_view(), name="sql_user_udate"),
+       path('fetch-user/', SQLUserView.as_view(), name="fetch-user"),
+       path('add-user/', CreateSQLUser.as_view(), name="add-user"),
+       path('user-list/', SQLUserList.as_view(), name="user-list"),
+       path('manage-user/<int:pk>', SQLUserUpdateView.as_view(), name="manage-user"),
 
 
 

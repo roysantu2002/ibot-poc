@@ -14,8 +14,8 @@ services:
       - DB_PASS=${DB_PASS}
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-      - DJANGO_DEBUG=1
-      - POSTGRES_PORT=5432
+      - DJANGO_DEBUG=0
+      - POSTGRES_PORT=5434
     ports:
       - "8000:8000"
     volumes:
@@ -27,10 +27,16 @@ services:
     image: postgres:13.0-alpine
     container_name: db
     restart: always
+    command: -p 5434
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_PORT=5434
+    expose:
+      - 5434
+    ports:
+      - "5434:5434"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 

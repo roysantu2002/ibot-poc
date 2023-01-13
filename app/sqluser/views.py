@@ -5,9 +5,6 @@ from django.http import Http404
 from django.views.generic.edit import UpdateView
 from drf_spectacular.utils import (OpenApiParameter, OpenApiTypes,
                                    extend_schema, extend_schema_view)
-from ldnservers.models import SQLServer
-from ldnservers.serializers import SQLServerSerializer
-from ldnsql.models import SQLUser
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view
@@ -16,7 +13,10 @@ from rest_framework.generics import (CreateAPIView, GenericAPIView,
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from sql.models import SQLServer
+from sql.serializers import SQLServerSerializer
 
+from .models import SQLUser
 from .serializers import SQLUserSerializer, UpdateUserSerializer
 
 

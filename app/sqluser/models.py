@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db import models
-from ldnservers.models import SQLServer
+from sql.models import SQLServer
 
 # Create your models here.
 

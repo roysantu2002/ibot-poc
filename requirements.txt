@@ -24,3 +24,4 @@ watchfiles==0.18.1
 websockets==10.4
 whitenoise==6.2.0
 uwsgi>=2.0.20,<2.1
+python-json-logger==2.0.4

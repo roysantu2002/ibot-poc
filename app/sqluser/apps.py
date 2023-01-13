@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class LdnserversConfig(AppConfig):
+class SqluserConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'ldnservers'
+    name = 'sqluser'

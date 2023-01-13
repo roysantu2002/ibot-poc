@@ -6,7 +6,7 @@ import os
 import sys
 from enum import unique
 
-from accounts.models import User
+from account.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import (TokenObtainPairSerializer,
                                                   TokenRefreshSerializer)
@@ -14,7 +14,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 logger = logging.getLogger(__name__)
 logger_django = logging.getLogger('django')
-logger_demo = logging.getLogger('demo_log')
+warn_log = logging.getLogger('warn_log')
 logger_ibots = logging.getLogger('ibots_log')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -28,6 +28,12 @@ class CustomUserSerializer(serializers.ModelSerializer):
     """
     Currently unused in preference of the below.
     """
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'password', 'about', 'is_staff', 'is_active', 'is_superuser')
+        extra_kwargs = {'password': {'write_only': True}}
+
     email = serializers.EmailField(required=True)
     # user_name = serializers.CharField(required=True)
     password = serializers.CharField(min_length=8, write_only=True)
@@ -39,7 +45,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             exc_type, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger_ibots.error(exc_type, fname, exc_tb.tb_lineno)
-
+            logger_ibots.error(f'Email Already Exists {self.request.session["id"]}')
             raise serializers.ValidationError("Email Already Exists")
 
         return lower_email
@@ -58,10 +64,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'password' : self.validated_data.get('password', '')
 
         }
-    class Meta:
-        model = User
-        fields = ('email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+
 
     def create(self, validated_data):
         try:

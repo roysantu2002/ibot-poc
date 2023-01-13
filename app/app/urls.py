@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('django.contrib.auth.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path(
         'api/docs/',
@@ -17,12 +18,12 @@ urlpatterns = [
     ),
     path('api-auth/', include('rest_framework.urls')),
     # path('api/', include('api.urls', namespace='api')),
-    path('api/account/', include('accounts.urls')),
-    path('api/ldnsql/', include('ldnsql.urls')),
-    path('api/ldnservers/', include('ldnservers.urls')),
-    path('api/login/', TokenObtainPairView.as_view()),
-    path('api/token/refresh/', TokenRefreshView.as_view()),
-    path('api/token/verify/', TokenVerifyView.as_view()),
+    path('api/account/', include('account.urls')),
+    path('api/sql-user/', include('sqluser.urls')),
+    path('api/sql-server/', include('sql.urls')),
+    path('api/account/login/', TokenObtainPairView.as_view()),
+    path('api/account/token/refresh/', TokenRefreshView.as_view()),
+    path('api/account/token/verify/', TokenVerifyView.as_view()),
     # path('api/account/', include('api.urls')),
 
 

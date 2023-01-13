@@ -6,6 +6,8 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
+from django.contrib.messages import constants as messages
+from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,14 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
-print(SECRET_KEY)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', True)
 if DEBUG in ['OFF', 'off', 'No', 'no', 'False', 'false', '0', '']:
     DEBUG = False
 else:
     DEBUG = True
-print(DEBUG)
+
 # ALLOWED_HOSTS = ['auth-core-app.herokuapp.com', 'localhost', '127.0.0.1']
 # ALLOWED_HOSTS = ['auth-core-app.herokuapp.com', '127.0.0.1', 'localhost', '0.0.0.0']
 
@@ -40,7 +42,6 @@ if ENV_ALLOWED_HOST:
     ALLOWED_HOSTS = ENV_ALLOWED_HOST
 
 print(ALLOWED_HOSTS)
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,9 +52,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'api',
-    'accounts',
-    'ldnsql',
-    'ldnservers',
+    'account',
+    'sql',
+    'sqluser',
     'rest_framework',
     # 'rest_framework.authtoken',
     'drf_spectacular',
@@ -83,7 +84,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR + '/templates/',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,6 +92,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # 'social_django.context_processors.backends',  # <-- Here
+                # 'social_django.context_processors.login_redirect', # <-- Here
             ],
         },
     },
@@ -110,8 +114,16 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # }
 # mongoengine.connect(db='coreapp', host='127.0.0.1', username=username, password=pwd)
 
-if os.environ.get('DJANGO_DEBUG') == 1:
-    DATABASES = dj_database_url.config(conn_max_age=600, ssl_require=True)
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '192.168.1.100',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+        }
+    }
 else:
     DATABASES = {
         'default': {
@@ -275,7 +287,7 @@ SIMPLE_JWT = {
 }
 
 # Custom user model
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "account.User"
 
 # REST_FRAMEWORK = {
 #     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -294,11 +306,12 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters' :{
         'verbose': {
-            'format' : '%(levelname)s %(asctime)s %(module)s %(lineno)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(lineno)d %(message)s'
         },
         'simple': {
              'format' : '%(levelname)s %(asctime)s %(module)s %(funcName)s %(lineno)d %(message)s'
         },
+        'django.server': DEFAULT_LOGGING['formatters']['django.server'],
     'filters': {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
@@ -312,28 +325,28 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'inf': {
+        'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'info.log'),
+            'filename': 'info.log',
             # 'maxBytes': 300*1024*1024,
             # 'backupCount': 10,
             'formatter': 'verbose',
             # 'encoding': 'uft-8',
         },
-        'demo': {
-            'level': 'INFO',
+        'warn': {
+            'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'demo.log'),
+            'filename': 'warning.log',
             # 'maxBytes': 300*1024*50,
             # 'backupCount': 5,
             'formatter': 'verbose',
             # 'encoding': 'uft-8'
         },
         'ibots': {
-            'level': 'INFO',
+            'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'ibots.log'),
+            'filename':  'ibots.log',
             # 'maxBytes': 1024*1024*1000, # 1000 MB
             # 'backupCount': 5,
             'formatter': 'verbose',
@@ -344,19 +357,43 @@ LOGGING = {
     'loggers': {
        # notice the blank '', Usually you would put built in loggers like django or root here based on your needs
         'django': {
-            'handlers': ['console', 'inf'], #notice how file variable is called in handler which has been defined above
+            'handlers': ['console', 'file'], #notice how file variable is called in handler which has been defined above
             'level': 'INFO',
             'propagate': True,
         },
-        'demo_log':{
-             'handlers': ['demo'], #notice how file variable is called in handler which has been defined above
-            'level': 'INFO',
+        'warn_log':{
+             'handlers': ['warn'], #notice how file variable is called in handler which has been defined above
+            'level': 'WARNING',
             'propagate': True,
         },
         'ibots_log':{
             'handlers': ['ibots'], #notice how file variable is called in handler which has been defined above
-            'level': 'INFO',
+            'level': 'ERROR',
             'propagate': True,
         }
     },
+}
+
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+
+"""
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+"""
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = '<Your Gmail address>'
+# EMAIL_HOST_PASSWORD = '<Your Gmail password>'
+# EMAIL_USE_TLS = True
+
+"""
+"""
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
 }
