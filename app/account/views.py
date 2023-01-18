@@ -20,10 +20,10 @@ from .serializers import (CustomUserSerializer, MyTokenObtainPairSerializer,
                           TokenObtainLifetimeSerializer,
                           TokenRefreshLifetimeSerializer)
 
-logger = logging.getLogger(__name__)
-logger_django = logging.getLogger('django')
-warn_log = logging.getLogger('warn_log')
-logger_ibots = logging.getLogger('ibots_log')
+# logger = logging.getLogger(__name__)
+# logger_django = logging.getLogger('django')
+# warn_log = logging.getLogger('warn_log')
+# logger_ibots = logging.getLogger('ibots_log')
 
 """
     RegisterView
@@ -68,10 +68,10 @@ class BlacklistTokenUpdateView(APIView):
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist()
-            logger_ibots.error(f'refresh_token {request.session["id"]}')
+            # logger_ibots.error(f'refresh_token {request.session["id"]}')
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            logger_ibots.error(f'refresh_token {request.session["id"]} status.HTTP_400_BAD_REQUEST')
+            # logger_ibots.error(f'refresh_token {request.session["id"]} status.HTTP_400_BAD_REQUEST')
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 

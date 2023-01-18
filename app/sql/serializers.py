@@ -1,8 +1,9 @@
 """
 Serializers for ldnsql server APIs
 """
-from .models import SQLServer
 from rest_framework import serializers
+
+from .models import SQLServer
 
 
 class SQLServerSerializer(serializers.ModelSerializer):
@@ -10,8 +11,9 @@ class SQLServerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SQLServer
-        fields = ['server_id', 'is_active']
+        fields = ['id' ,'server_id', 'is_active']
         read_only_fields = ['id']
+    # server_id = serializers.CharField(required=True, min_length=8)
 
     def create(self, validated_data):
         try:

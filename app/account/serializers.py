@@ -12,10 +12,10 @@ from rest_framework_simplejwt.serializers import (TokenObtainPairSerializer,
                                                   TokenRefreshSerializer)
 from rest_framework_simplejwt.tokens import RefreshToken
 
-logger = logging.getLogger(__name__)
-logger_django = logging.getLogger('django')
-warn_log = logging.getLogger('warn_log')
-logger_ibots = logging.getLogger('ibots_log')
+# logger = logging.getLogger(__name__)
+# logger_django = logging.getLogger('django')
+# warn_log = logging.getLogger('warn_log')
+# logger_ibots = logging.getLogger('ibots_log')
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -41,11 +41,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         lower_email = value.lower()
         if User.objects.filter(email__iexact=lower_email).exists():
-            logger_ibots.error('validate_email')
+            # logger_ibots.error('validate_email')
             exc_type, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger_ibots.error(exc_type, fname, exc_tb.tb_lineno)
-            logger_ibots.error(f'Email Already Exists {self.request.session["id"]}')
+            # logger_ibots.error(exc_type, fname, exc_tb.tb_lineno)
+            # logger_ibots.error(f'Email Already Exists {self.request.session["id"]}')
             raise serializers.ValidationError("Email Already Exists")
 
         return lower_email

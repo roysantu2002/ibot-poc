@@ -296,83 +296,83 @@ AUTH_USER_MODEL = "account.User"
 SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
-
-"""
-LOGGER
-"""
-LOGGING = {
-    'version': 1,
-    # The version number of our log
-    'disable_existing_loggers': False,
-    'formatters' :{
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(lineno)d %(message)s'
-        },
-        'simple': {
-             'format' : '%(levelname)s %(asctime)s %(module)s %(funcName)s %(lineno)d %(message)s'
-        },
-        'django.server': DEFAULT_LOGGING['formatters']['django.server'],
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    },
-    # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
-    # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'info.log',
-            # 'maxBytes': 300*1024*1024,
-            # 'backupCount': 10,
-            'formatter': 'verbose',
-            # 'encoding': 'uft-8',
-        },
-        'warn': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': 'warning.log',
-            # 'maxBytes': 300*1024*50,
-            # 'backupCount': 5,
-            'formatter': 'verbose',
-            # 'encoding': 'uft-8'
-        },
-        'ibots': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename':  'ibots.log',
-            # 'maxBytes': 1024*1024*1000, # 1000 MB
-            # 'backupCount': 5,
-            'formatter': 'verbose',
-            # 'encoding': 'uft-8'
-        }
-    },
-    # A logger for WARNING which has a handler called 'file'. A logger can have multiple handler
-    'loggers': {
-       # notice the blank '', Usually you would put built in loggers like django or root here based on your needs
-        'django': {
-            'handlers': ['console', 'file'], #notice how file variable is called in handler which has been defined above
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'warn_log':{
-             'handlers': ['warn'], #notice how file variable is called in handler which has been defined above
-            'level': 'WARNING',
-            'propagate': True,
-        },
-        'ibots_log':{
-            'handlers': ['ibots'], #notice how file variable is called in handler which has been defined above
-            'level': 'ERROR',
-            'propagate': True,
-        }
-    },
-}
+#
+# """
+# LOGGER
+# """
+# LOGGING = {
+#     'version': 1,
+#     # The version number of our log
+#     'disable_existing_loggers': False,
+#     'formatters' :{
+#         'verbose': {
+#             'format': '%(levelname)s %(asctime)s %(module)s %(lineno)d %(message)s'
+#         },
+#         'simple': {
+#              'format' : '%(levelname)s %(asctime)s %(module)s %(funcName)s %(lineno)d %(message)s'
+#         },
+#         'django.server': DEFAULT_LOGGING['formatters']['django.server'],
+#     'filters': {
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         },
+#     },
+#     },
+#     # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
+#     # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'verbose',
+#         },
+#         # 'file': {
+#         #     'level': 'INFO',
+#         #     'class': 'logging.FileHandler',
+#         #     'filename': 'info.log',
+#         #     # 'maxBytes': 300*1024*1024,
+#         #     # 'backupCount': 10,
+#         #     'formatter': 'verbose',
+#         #     # 'encoding': 'uft-8',
+#         # },
+#         'warn': {
+#             'level': 'WARNING',
+#             'class': 'logging.FileHandler',
+#             'filename': 'warning.log',
+#             # 'maxBytes': 300*1024*50,
+#             # 'backupCount': 5,
+#             'formatter': 'verbose',
+#             # 'encoding': 'uft-8'
+#         },
+#         'ibots': {
+#             'level': 'ERROR',
+#             'class': 'logging.FileHandler',
+#             'filename':  'ibots.log',
+#             # 'maxBytes': 1024*1024*1000, # 1000 MB
+#             # 'backupCount': 5,
+#             'formatter': 'verbose',
+#             # 'encoding': 'uft-8'
+#         }
+#     },
+#     # A logger for WARNING which has a handler called 'file'. A logger can have multiple handler
+#     'loggers': {
+#        # notice the blank '', Usually you would put built in loggers like django or root here based on your needs
+#         'django': {
+#             'handlers': ['console', 'file'], #notice how file variable is called in handler which has been defined above
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#         'warn_log':{
+#              'handlers': ['warn'], #notice how file variable is called in handler which has been defined above
+#             'level': 'WARNING',
+#             'propagate': True,
+#         },
+#         'ibots_log':{
+#             'handlers': ['ibots'], #notice how file variable is called in handler which has been defined above
+#             'level': 'ERROR',
+#             'propagate': True,
+#         }
+#     },
+# }
 
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGIN_URL = 'login'

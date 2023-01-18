@@ -78,42 +78,31 @@ class SQLUserView(GenericAPIView):
 """
 update user view
 """
+@extend_schema(
+    parameters=[
+        OpenApiParameter(name='user_id',location=OpenApiParameter.QUERY, description='user_id', required=False, type=str),
+    ],
+)
+
 class SQLUserUpdateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SQLUserSerializer
 
-    """
-    Retrieve, update or delete a transformer instance
-    """
-    def get_object(self, pk):
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user_id', None)
+        if user_id is not None:
+            if SQLUser.objects.filter(user_id=user_id).exists():
+                queryset = SQLUser.objects.filter(user_id=user_id)
+                return queryset
 
-        # Returns an object instance that should
-        # be used for detail views.
+    def delete(self, request, *args, **kwargs):
         try:
-            return SQLUser.objects.get(pk=pk)
-        except SQLUser.DoesNotExist:
-            raise Http404
+            queryset = self.get_queryset()
+            if queryset is not None:
+                queryset.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
 
-    def put(self, request, pk):
-        user = self.get_object(pk)
-        serializer = SQLUserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, pk):
-        user = self.get_object(pk)
-        serializer = SQLUserSerializer(user,
-                                           data=request.data,
-                                           partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self,pk):
-        user = self.get_object(pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+            return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -17,7 +17,7 @@ urlpatterns = [
        path('fetch-user/', SQLUserView.as_view(), name="fetch-user"),
        path('add-user/', CreateSQLUser.as_view(), name="add-user"),
        path('user-list/', SQLUserList.as_view(), name="user-list"),
-       path('manage-user/<int:pk>', SQLUserUpdateView.as_view(), name="manage-user"),
+       path('manage-user/', SQLUserUpdateView.as_view(), name="manage-user"),
 
 
 

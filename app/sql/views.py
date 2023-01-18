@@ -2,6 +2,7 @@
 views for ldnsql server APIs
 """
 from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status, viewsets
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -61,6 +62,7 @@ class SQLServerView(GenericAPIView):
 """
 update server view
 """
+
 class SQLServerUpdateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SQLServerSerializer
@@ -69,7 +71,6 @@ class SQLServerUpdateView(APIView):
     Retrieve, update or delete a transformer instance
     """
     def get_object(self, pk):
-
         # Returns an object instance that should
         # be used for detail views.
         try:
@@ -79,6 +80,7 @@ class SQLServerUpdateView(APIView):
 
     def put(self, request, pk):
         server = self.get_object(pk)
+        print(server)
         serializer = SQLServerSerializer(server, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -95,8 +97,12 @@ class SQLServerUpdateView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self,pk):
-        server = self.get_object(pk)
-        server.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+    def delete(self, request, pk):
+        try:
+            server = self.get_object(pk)
+            # data = get_object_or_404(SQLServer, id=id)
+            server.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
